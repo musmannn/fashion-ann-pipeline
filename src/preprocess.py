@@ -8,6 +8,12 @@ RAW = "data/raw"
 OUT = "data/processed"
 
 
+def minmax(x):
+    lo = x.min(axis=(1, 2), keepdims=True)
+    hi = x.max(axis=(1, 2), keepdims=True)
+    return (x - lo) / np.maximum(hi - lo, 1e-7)
+
+
 def main():
     params = yaml.safe_load(open("params.yaml"))["preprocess"]
     os.makedirs(OUT, exist_ok=True)
@@ -15,10 +21,9 @@ def main():
     train = np.load(f"{RAW}/train.npz")
     test = np.load(f"{RAW}/test.npz")
 
-    x_train = train["x"].astype("float32") / 255.0
-    x_test = test["x"].astype("float32") / 255.0
-    # keep everything inside [0, 1]
-    x_train, x_test = np.clip(x_train, 0, 1), np.clip(x_test, 0, 1)
+    # scale every image to [0, 1] on its own (per-image min-max)
+    x_train = minmax(train["x"].astype("float32"))
+    x_test = minmax(test["x"].astype("float32"))
 
     x_tr, x_val, y_tr, y_val = train_test_split(
         x_train, train["y"],
