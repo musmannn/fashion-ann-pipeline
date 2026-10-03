@@ -1,0 +1,13 @@
+venv/
+__pycache__/
+*.pyc
+.dvc/cache
+.dvc/tmp
+# dvc handles these
+*.h5
+# credentials / tokens, never commit these
+.dvc/config.local
+*credentials*.json
+client_secret*.json
+*.pickle
+.env
