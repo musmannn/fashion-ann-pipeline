@@ -1,7 +1,7 @@
 # builds and trains the ANN, hyperparams come from params.yaml
+import csv
 import os
 import numpy as np
-import pandas as pd
 import yaml
 from tensorflow import keras
 
@@ -36,7 +36,13 @@ def main():
 
     os.makedirs("models", exist_ok=True)
     model.save("models/model.h5")
-    pd.DataFrame(hist.history).to_csv("models/history.csv", index_label="epoch")
+    # pandas isnt in the requirements so just use csv
+    keys = list(hist.history.keys())
+    with open("models/history.csv", "w", newline="") as f:
+        w = csv.writer(f)
+        w.writerow(["epoch"] + keys)
+        for i in range(len(hist.history[keys[0]])):
+            w.writerow([i] + [hist.history[k][i] for k in keys])
 
 
 if __name__ == "__main__":
