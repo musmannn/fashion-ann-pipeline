@@ -21,9 +21,13 @@ def main():
     train = np.load(f"{RAW}/train.npz")
     test = np.load(f"{RAW}/test.npz")
 
-    # scale every image to [0, 1] on its own (per-image min-max)
+    # merged: per-image min-max to [0, 1] first (main), then standardize
+    # with the training mean/std (teammate-sim)
     x_train = minmax(train["x"].astype("float32"))
     x_test = minmax(test["x"].astype("float32"))
+    mean, std = x_train.mean(), x_train.std()
+    x_train = (x_train - mean) / std
+    x_test = (x_test - mean) / std
 
     x_tr, x_val, y_tr, y_val = train_test_split(
         x_train, train["y"],
