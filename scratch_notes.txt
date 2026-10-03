@@ -1,0 +1,1 @@
+todo: try bigger hidden layer, check dropout, maybe lr scheduler
