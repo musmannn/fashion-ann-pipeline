@@ -28,6 +28,7 @@ def main():
     np.savez_compressed(f"{OUT}/train.npz", x=x_tr, y=y_tr)
     np.savez_compressed(f"{OUT}/val.npz", x=x_val, y=y_val)
     np.savez_compressed(f"{OUT}/test.npz", x=x_test, y=test["y"])
+    print("train/val/test:", x_tr.shape, x_val.shape, x_test.shape)
 
 
 if __name__ == "__main__":
